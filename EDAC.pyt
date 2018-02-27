@@ -11,15 +11,15 @@ timestamp=datetime.datetime.now()
 
 class Toolbox(object):
     def __init__(self):
-        self.label =  "LiDAR Building Extractor"
-        self.alias  = "Things and stuff."
+        self.label =  "EDAC Toolbox"
+        self.alias  = "EDAC ArcGIS Toolbox"
 
         # List of tool classes associated with this toolbox
         self.tools = [Building_Extractor]
 
 class Building_Extractor(object):
     def __init__(self):
-        self.label = "Initial Building Objects"
+        self.label = "Building Extractor"
         self.description = "This tool will extract initial Building raster objects from LAS 1.4 tiles and their associated bare earth DEM tiles."
         self.canRunInBackground = False
 
@@ -27,7 +27,7 @@ class Building_Extractor(object):
 
 
      # Input parameters
-    	lasdir = arcpy.Parameter(displayName="LAS Input Directory",name="lasdir",datatype="DEFolder",parameterType="Required", direction="Input")
+        lasdir = arcpy.Parameter(displayName="LAS Input Directory",name="lasdir",datatype="DEFolder",parameterType="Required", direction="Input")
         demdir = arcpy.Parameter(displayName="DEM Input Direcotry",name="demdir",datatype="DEFolder",parameterType="Required", direction="Input")
         outputdir = arcpy.Parameter(displayName="Output Directory",name="outputdir",datatype="DEFolder",parameterType="Required", direction="Input")
         spectral_detail = arcpy.Parameter(displayName="Spectral Detail",name="spectral_detail",datatype="GPDouble",parameterType="Required", direction="Input", category = "Segment Mean Shift Parameters")
@@ -169,7 +169,7 @@ class Building_Extractor(object):
 	    field = "VALUE"
 	    arcpy.RasterToPolygon_conversion(CountoutCon, outPolygons, "NO_SIMPLIFY")
 	    outZonalStats = ZonalStatistics(outPolygons, "GRIDCODE", outSetNull, "STD","NODATA")
- 	    outZonalStats.save(os.path.join(fulloutfolder,"test"+basename+".img"))
+            outZonalStats.save(os.path.join(fulloutfolder,"test"+basename+".img"))
             arcpy.AddMessage("Finished:" + filename)
 	return
 
