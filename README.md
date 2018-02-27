@@ -11,7 +11,7 @@ Download and unzip the github repo.
 https://github.com/edac/ArcGIS-Toolbox/archive/master.zip
 
 
-Open ArcMap and right click on Toobox, and click Add Toolbox...
+Open ArcMap and right click on "ArcToolbox", and click "Add Toolbox..."
 
 
 ![](media/TB1.png)
