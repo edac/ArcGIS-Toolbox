@@ -169,8 +169,8 @@ class Building_Extractor(object):
                 "Segment Mean Shift phase. This will take some time. Be patient.")
             seg_raster = SegmentMeanShift(
                 outSetNull, spectral_detail, spatial_detail,  min_segment_size)
-            # seg_raster.save(os.path.join(
-            #     fulloutfolder, "lrdiffgt2is"+basename+".img"))
+            seg_raster.save(os.path.join(
+                fulloutfolder, "lrdiffgt2is"+basename+".img"))
             CountoutCon = Con(seg_raster, seg_raster, 0.00, "COUNT < 10000")
             CountoutCon.save(os.path.join(fulloutfolder, "isobj"+basename+".img"))
             outPolygons = os.path.join(fulloutfolder, basename+".shp")
