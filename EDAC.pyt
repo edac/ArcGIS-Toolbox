@@ -15,7 +15,7 @@ class Toolbox(object):
         self.alias = "EDAC ArcGIS Toolbox"
 
         # List of tool classes associated with this toolbox
-        self.tools = [Building_Extractor]
+        self.tools = [Building_Extractor, Building_Filter]
 
 
 class Building_Extractor(object):
@@ -183,3 +183,49 @@ class Building_Extractor(object):
                 fulloutfolder, "isobjsd"+basename+".img"))
             arcpy.AddMessage("Finished:" + filename)
         return
+class Building_Filter(object):
+    def __init__(self):
+        self.label = "Building Filter"
+        self.description = "This tool will set everything above a threshold to null"
+        self.canRunInBackground = False
+    def getParameterInfo(self):
+
+     # Input parameters
+        inputdir = arcpy.Parameter(displayName="Input Directory", name="inputdir",
+                                 datatype="DEFolder", parameterType="Required", direction="Input")
+        outputdir = arcpy.Parameter(displayName="Output Directory", name="outputdir",
+                                 datatype="DEFolder", parameterType="Required", direction="Input")
+        threshold = arcpy.Parameter(displayName="Threshold", name="threshold",
+                                 datatype="GPLong", parameterType="Required", direction="Input")
+        # setting default value
+        threshold.value = 2
+        parameters = [inputdir, outputdir, threshold]
+        return parameters
+    def isLicensed(self):  # optional
+        return True
+
+    def updateMessages(self, parameters):
+        return
+
+    def execute(self, parameters, messages):
+        arcpy.SetProgressor("default", "Working...", 0, 2, 1)
+        env.workspace = arcpy.env.scratchFolder
+        indir = parameters[0].valueAsText
+        outfolder = parameters[1].valueAsText
+        threshold = parameters[2].valueAsText
+        fulloutfolder = os.path.join(
+            outfolder, timestamp.strftime('%Y%m%d%H%M%S'))
+
+        arcpy.AddMessage("Creating output folder")
+        os.mkdir(fulloutfolder)
+
+        files = [f for f in os.listdir(indir) if f.startswith('isobjsd') and f.endswith('img')]
+        totalfiles = len(files)
+        progress = 0
+        for filename in files:  # os.listdir(lasdir):
+            filepath= os.path.join(indir,filename)
+            arcpy.AddMessage(filepath)
+            basename = filename.rstrip(".img")
+            arcpy.AddMessage(basename)
+            outSetNull = SetNull(filepath, filepath, "VALUE >"+ threshold)
+            outSetNull.save(os.path.join(fulloutfolder, "filt" + basename + ".img"))
