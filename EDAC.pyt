@@ -183,6 +183,8 @@ class Building_Extractor(object):
                 fulloutfolder, "isobjsd"+basename+".img"))
             arcpy.AddMessage("Finished:" + filename)
         return
+
+        
 class Building_Filter(object):
     def __init__(self):
         self.label = "Building Filter"
@@ -196,9 +198,9 @@ class Building_Filter(object):
         outputdir = arcpy.Parameter(displayName="Output Directory", name="outputdir",
                                  datatype="DEFolder", parameterType="Required", direction="Input")
         threshold = arcpy.Parameter(displayName="Threshold", name="threshold",
-                                 datatype="GPLong", parameterType="Required", direction="Input")
+                                 datatype="GPDouble", parameterType="Required", direction="Input")
         # setting default value
-        threshold.value = 2
+        threshold.value = 1.5
         parameters = [inputdir, outputdir, threshold]
         return parameters
     def isLicensed(self):  # optional
