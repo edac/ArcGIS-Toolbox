@@ -22,8 +22,8 @@ class Toolbox(object):
 
 class Building_Extractor(object):
     def __init__(self):
-        self.label = "Building Object Extractor"
-        self.description = "This tool will extract initial Building raster objects from LAS 1.4 tiles and their associated bare earth DEM tiles."
+        self.label = "Step 1 - Building Object Extractor"
+        self.description = "This tool creates raster building objects using LiDAR LAS 1.4 tiles.  The tool requires both the LAS and bare earth DEM tiles (as an Imagine .img, TIFF or ESRI Grid format) to be in separate folders and sharing the same naming convention.  This tool takes these files and a user defined minimum height above ground for a building to create the raster objects."
         self.canRunInBackground = False
 
     def getParameterInfo(self):
@@ -36,15 +36,15 @@ class Building_Extractor(object):
         outputdir = arcpy.Parameter(displayName="Output Directory", name="outputdir",
                                     datatype="DEFolder", parameterType="Required", direction="Input")
         spectral_detail = arcpy.Parameter(displayName="Spectral Detail", name="spectral_detail", datatype="GPDouble",
-                                          parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                          parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         spectral_detail.value = 15.5
         spatial_detail = arcpy.Parameter(displayName="Spatial Detail", name="spatial_detail", datatype="GPLong",
-                                         parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                         parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         spatial_detail.value = 15
         min_segment_size = arcpy.Parameter(displayName="Min Segment Size", name="min_segment_size", datatype="GPLong",
-                                           parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                           parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         min_segment_size.value = 10
         height = arcpy.Parameter(displayName="Minimum Height (As Measured in Elevation Units)", name="height",
@@ -209,8 +209,8 @@ class Building_Extractor(object):
         
 class Building_Filter(object):
     def __init__(self):
-        self.label = "SD Building Filter"
-        self.description = "This tool will set everything above a threshold to null"
+        self.label = "Step 2A - SD Building Filter"
+        self.description = "This tool creates building footprints from the output derived from the Building Object Extractor tool and then filters these objects using only the rooftop height standard deviation.  The results from these filters are then converted to vector polygons, filtered based on a minimum roof area and the edges cleaned up to create the building footprint polygons."
         self.canRunInBackground = False
     def getParameterInfo(self):
 
@@ -222,15 +222,15 @@ class Building_Filter(object):
         threshold = arcpy.Parameter(displayName="Threshold", name="threshold",
                                  datatype="GPDouble", parameterType="Required", direction="Input")
         spectral_detail = arcpy.Parameter(displayName="Spectral Detail", name="spectral_detail", datatype="GPDouble",
-                                          parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                          parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         spectral_detail.value = 15.5
         spatial_detail = arcpy.Parameter(displayName="Spatial Detail", name="spatial_detail", datatype="GPLong",
-                                         parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                         parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         spatial_detail.value = 15
         min_segment_size = arcpy.Parameter(displayName="Min Segment Size", name="min_segment_size", datatype="GPLong",
-                                           parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                           parameterType="Required", direction="Input", category="Image Segmentation Parameters")
         min_segment_size.value = 10
         # setting default value
         threshold.value = 1.5
@@ -256,7 +256,7 @@ class Building_Filter(object):
         densification.value=2
 
         shapearea = arcpy.Parameter(displayName="Minimum Building Footprint Area (in map units)", name="shapearea",
-                                 datatype="GPLong", parameterType="Required", direction="Input", category="Select Analysis")
+                                 datatype="GPLong", parameterType="Required", direction="Input", category="Footprint Size Threshold")
         shapearea.value=32
 
 
@@ -334,8 +334,8 @@ class Building_Filter(object):
 
 class NDVIBuilding_Filter(object):
     def __init__(self):
-        self.label = "NDVI Building Filter"
-        self.description = "This tool will set everything above a threshold to null"
+        self.label = "Step 2B - SD and NDVI Building Filter"
+        self.description = "This tool creates building footprints from the output derived from the Building Object Extractor tool and then filters these objects using the rooftop height standard deviation and their average NDVI value.  The results from these filters are then converted to vector polygons, filtered based on a minimum roof area and the edges cleaned up to create the building footprint polygons."
         self.canRunInBackground = False
     def getParameterInfo(self):
 
@@ -353,15 +353,15 @@ class NDVIBuilding_Filter(object):
         ndvithreshold = arcpy.Parameter(displayName=" NDVI Threshold", name="ndvithreshold",
                                  datatype="GPDouble", parameterType="Required", direction="Input")
         spectral_detail = arcpy.Parameter(displayName="Spectral Detail", name="spectral_detail", datatype="GPDouble",
-                                          parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                          parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         spectral_detail.value = 15.5
         spatial_detail = arcpy.Parameter(displayName="Spatial Detail", name="spatial_detail", datatype="GPLong",
-                                         parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                         parameterType="Required", direction="Input", category="Image Segmentation Parameters")
       # setting default value
         spatial_detail.value = 15
         min_segment_size = arcpy.Parameter(displayName="Min Segment Size", name="min_segment_size", datatype="GPLong",
-                                           parameterType="Required", direction="Input", category="Segment Mean Shift Parameters")
+                                           parameterType="Required", direction="Input", category="Image Segmentation Parameters")
         min_segment_size.value = 10
         # setting default value
         threshold.value = 1.5
@@ -388,7 +388,7 @@ class NDVIBuilding_Filter(object):
         densification.value=2
 
         shapearea = arcpy.Parameter(displayName="Minimum Building Footprint Area (in map units)", name="shapearea",
-                                 datatype="GPLong", parameterType="Required", direction="Input", category="Select Analysis")
+                                 datatype="GPLong", parameterType="Required", direction="Input", category="Footprint Size Threshold")
         shapearea.value=32
 
 
